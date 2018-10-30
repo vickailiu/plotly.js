@@ -176,6 +176,13 @@ exports.cleanLayout = function(layout) {
         }
     }
 
+    // Check for old-style title definition
+    if(!Lib.isPlainObject(layout.title)) {
+        layout.title = {
+            text: layout.title
+        };
+    }
+
     /*
      * Moved from rotate -> orbit for dragmode
      */
