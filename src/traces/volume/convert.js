@@ -153,6 +153,11 @@ function convert(gl, scene, trace) {
     var ys = getSequence(trace.y, xs.length);
     var zs = getSequence(trace.z, xs.length * ys.length);
 
+console.log("xs=", xs);
+console.log("ys=", ys);
+console.log("zs=", zs);
+
+
     volumeOpts.dimensions = [xs.length, ys.length, zs.length];
     volumeOpts.meshgrid = [
         toDataCoords(xs, 'xaxis'),
@@ -196,7 +201,14 @@ function convert(gl, scene, trace) {
 
     var bounds = [[0, 0, 0], volumeOpts.dimensions];
 
+    console.log("volumeOpts=", volumeOpts);
+    console.log("bounds=", bounds);
+
     var volume = volumePlot(gl, volumeOpts, bounds);
+
+    console.log("volume=", volume);
+
+/*
 
     // pass gl-mesh3d lighting attributes
     var lp = trace.lightposition;
@@ -211,7 +223,25 @@ function convert(gl, scene, trace) {
         meshData.opacity = trace.opacity;
 
     }
+*/
 
+/*
+    // pass gl-mesh3d lighting attributes
+    var lp = trace.lightposition;
+    //for(var i = 0; i < volume.mesh.length; i++) {
+        //var meshData = volume.mesh[i];
+        var meshData = volume;
+
+        meshData.lightPosition = [lp.x, lp.y, lp.z];
+        meshData.ambient = trace.lighting.ambient;
+        meshData.diffuse = trace.lighting.diffuse;
+        meshData.specular = trace.lighting.specular;
+        meshData.roughness = trace.lighting.roughness;
+        meshData.fresnel = trace.lighting.fresnel;
+        meshData.opacity = trace.opacity;
+
+    //}
+*/
     return volume;
 }
 

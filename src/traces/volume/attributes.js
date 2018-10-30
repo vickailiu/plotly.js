@@ -116,4 +116,6 @@ fromMesh3d.forEach(function(k) {
     attrs[k] = mesh3dAttrs[k];
 });
 
+console.log("attrs=", attrs);
+
 module.exports = attrs;
