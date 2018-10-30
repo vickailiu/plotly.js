@@ -2140,7 +2140,7 @@ axes.doTicksSingle = function(gd, arg, skipTitle) {
 
         Titles.draw(gd, axid + 'title', {
             propContainer: ax,
-            propName: ax._name + '.title',
+            propName: ax._name + '.title.text',
             placeholder: fullLayout._dfltTitle[axLetter],
             avoid: avoid,
             transform: transform,

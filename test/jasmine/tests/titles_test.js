@@ -134,9 +134,9 @@ describe('editable titles', function() {
 
     it('has hover effects for blank titles', function(done) {
         Plotly.plot(gd, data, {
-            xaxis: {title: ''},
-            yaxis: {title: ''},
-            title: ''
+            xaxis: {title: {text: ''}},
+            yaxis: {title: {text: ''}},
+            title: {text: ''}
         }, {editable: true})
         .then(function() {
             return Promise.all([
@@ -150,18 +150,18 @@ describe('editable titles', function() {
 
     it('has no hover effects for titles that used to be blank', function(done) {
         Plotly.plot(gd, data, {
-            xaxis: {title: ''},
-            yaxis: {title: ''},
-            title: ''
+            xaxis: {title: {text: ''}},
+            yaxis: {title: {text: ''}},
+            title: {text: ''}
         }, {editable: true})
         .then(function() {
-            return editTitle('x', 'xaxis.title', 'XXX');
+            return editTitle('x', 'xaxis.title.text', 'XXX');
         })
         .then(function() {
-            return editTitle('y', 'yaxis.title', 'YYY');
+            return editTitle('y', 'yaxis.title.text', 'YYY');
         })
         .then(function() {
-            return editTitle('g', 'title', 'TTT');
+            return editTitle('g', 'title.text', 'TTT');
         })
         .then(function() {
             return Promise.all([
