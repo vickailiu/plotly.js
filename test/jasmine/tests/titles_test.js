@@ -34,9 +34,33 @@ describe('Plot title', function() {
     it('can still be defined as `layout.title` to ensure backwards-compatibility', function() {
         Plotly.plot(gd, data, {title: 'Plotly line chart'});
 
-        expect(titleSel().text()).toBe('Plotly line chart');
+        expectTitle('Plotly line chart');
         expectDefaultCenteredPosition();
     });
+
+    it('can be updated via `relayout`', function(done) {
+        Plotly.plot(gd, data, {title: 'Plotly line chart'})
+          .then(expectTitleFn('Plotly line chart'))
+          .then(function() {
+              return Plotly.relayout(gd, {title: {text: 'Some other title'}});
+          })
+          .then(expectTitleFn('Some other title'))
+          .catch(fail)
+          .then(done);
+    });
+
+    // TODO compatibility test
+    // it('can be updated via `relayout` despite using the old ...', function(done) {
+
+    function expectTitle(expTitle) {
+        expectTitleFn(expTitle)();
+    }
+
+    function expectTitleFn(expTitle) {
+        return function() {
+            expect(titleSel().text()).toBe(expTitle);
+        };
+    }
 
     function expectDefaultCenteredPosition() {
         var containerBB = gd.getBoundingClientRect();
