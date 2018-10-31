@@ -2,11 +2,11 @@ var d3 = require('d3');
 
 var Plotly = require('@lib/index');
 var interactConstants = require('@src/constants/interactions');
+var Lib = require('@src/lib');
 
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
 var mouseEvent = require('../assets/mouse_event');
-
 
 describe('Plot title', function() {
     'use strict';
@@ -28,14 +28,14 @@ describe('Plot title', function() {
     it('is centered horizontally and vertically above the plot by default', function() {
         Plotly.plot(gd, data, layout);
 
-        expectDefaultCenteredPosition();
+        expectDefaultCenteredPosition(gd);
     });
 
     it('can still be defined as `layout.title` to ensure backwards-compatibility', function() {
         Plotly.plot(gd, data, {title: 'Plotly line chart'});
 
         expectTitle('Plotly line chart');
-        expectDefaultCenteredPosition();
+        expectDefaultCenteredPosition(gd);
     });
 
     it('can be updated via `relayout`', function(done) {
@@ -49,40 +49,186 @@ describe('Plot title', function() {
           .then(done);
     });
 
-    // TODO compatibility test
-    // it('can be updated via `relayout` despite using the old ...', function(done) {
+    it('preserves alignment when text is updated via `Plotly.relayout` using an attribute string', function() {
+        // TODO implement once alignment is implemented
+    });
 
-    function expectTitle(expTitle) {
-        expectTitleFn(expTitle)();
-    }
+    it('preserves alignment when text is updated via `Plotly.update` using an attribute string', function() {
+        // TODO implement once alignment is implemented
+    });
 
-    function expectTitleFn(expTitle) {
-        return function() {
-            expect(titleSel().text()).toBe(expTitle);
+    it('discards alignment when text is updated via `Plotly.relayout` by passing a new title object', function() {
+        // TODO implement once alignment is implemented
+    });
+
+    it('discards alignment when text is updated via `Plotly.update` by passing a new title object', function() {
+        // TODO implement once alignment is implemented
+    });
+});
+
+describe('titles can be updated', function() {
+    'use strict';
+
+    var data = [{x: [1, 2, 3], y: [1, 2, 3]}];
+    var layout = {
+        title: {text: 'Plotly line chart'},
+        xaxis: {title: {text: 'Age'}},
+        yaxis: {title: {text: 'Weight'}}
+    };
+    var NEW_TITLE = 'Weight over years';
+    var NEW_XTITLE = 'Age in years';
+    var NEW_YTITLE = 'Average weight';
+    var gd;
+
+    beforeEach(function() {
+        gd = createGraphDiv();
+        Plotly.plot(gd, data, Lib.extendDeep({}, layout));
+        expectInitialTitles();
+    });
+
+    afterEach(destroyGraphDiv);
+
+    it('via `Plotly.relayout` by replacing the entire title objects', function() {
+        var update = {
+            title: {text: NEW_TITLE},
+            xaxis: {title: {text: NEW_XTITLE}},
+            yaxis: {title: {text: NEW_YTITLE}}
         };
+        Plotly.relayout(gd, update);
+
+        expectChangedTitles();
+    });
+
+    it('via `Plotly.relayout` by using attribute strings', function() {
+        var update = {
+            'title.text': NEW_TITLE,
+            'xaxis.title.text': NEW_XTITLE,
+            'yaxis.title.text': NEW_YTITLE
+        };
+        Plotly.relayout(gd, update);
+
+        expectChangedTitles();
+    });
+
+    it('via `Plotly.relayout` despite passing title only as a string (backwards-compatibility)', function() {
+        var update = {
+            title: NEW_TITLE,
+            xaxis: {title: NEW_XTITLE},
+            yaxis: {title: NEW_YTITLE}
+        };
+        Plotly.relayout(gd, update);
+
+        expectChangedTitles();
+    });
+
+    it('via `Plotly.relayout` despite passing title only as a string using string attributes ' +
+      '(backwards-compatibility)', function() {
+        var update = {
+            'title': NEW_TITLE,
+            'xaxis.title': NEW_XTITLE,
+            'yaxis.title': NEW_YTITLE
+        };
+        Plotly.relayout(gd, update);
+
+        expectChangedTitles();
+    });
+
+    it('via `Plotly.update` by replacing the entire title objects', function() {
+        var update = {
+            title: {text: NEW_TITLE},
+            xaxis: {title: {text: NEW_XTITLE}},
+            yaxis: {title: {text: NEW_YTITLE}}
+        };
+        Plotly.update(gd, {}, update);
+
+        expectChangedTitles();
+    });
+
+    it('via `Plotly.update` by using attribute strings', function() {
+        var update = {
+            'title.text': NEW_TITLE,
+            'xaxis.title.text': NEW_XTITLE,
+            'yaxis.title.text': NEW_YTITLE
+        };
+        Plotly.update(gd, {}, update);
+
+        expectChangedTitles();
+    });
+
+    it('via `Plotly.update` despite passing title only as a string (backwards-compatibility)', function() {
+        var update = {
+            title: NEW_TITLE,
+            xaxis: {title: NEW_XTITLE},
+            yaxis: {title: NEW_YTITLE}
+        };
+        Plotly.update(gd, {}, update);
+
+        expectChangedTitles();
+    });
+
+    it('via `Plotly.update` despite passing title only as a string using string attributes ' +
+      '(backwards-compatibility)', function() {
+        var update = {
+            'title': NEW_TITLE,
+            'xaxis.title': NEW_XTITLE,
+            'yaxis.title': NEW_YTITLE
+        };
+        Plotly.update(gd, {}, update);
+
+        expectChangedTitles();
+    });
+
+    function expectInitialTitles() {
+        expectTitles('Plotly line chart', 'Age', 'Weight');
     }
 
-    function expectDefaultCenteredPosition() {
-        var containerBB = gd.getBoundingClientRect();
-
-        expect(titleX()).toBe(containerBB.width / 2);
-        expect(titleY()).toBe(gd._fullLayout.margin.t / 2);
+    function expectChangedTitles() {
+        expectTitles(NEW_TITLE, NEW_XTITLE, NEW_YTITLE);
     }
 
-    function titleX() {
-        return Number.parseFloat(titleSel().attr('x'));
-    }
+    function expectTitles(expTitle, expXTitle, expYTitle) {
+        expectTitle(expTitle);
 
-    function titleY() {
-        return Number.parseFloat(titleSel().attr('y'));
-    }
+        var xTitleSel = d3.select('.xtitle');
+        expect(xTitleSel.empty()).toBe(false, 'X-axis title element missing');
+        expect(xTitleSel.text()).toBe(expXTitle);
 
-    function titleSel() {
-        var titleSel = d3.select('.infolayer .g-gtitle .gtitle');
-        expect(titleSel.empty()).toBe(false, 'Title element missing');
-        return titleSel;
+        var yTitleSel = d3.select('.ytitle');
+        expect(yTitleSel.empty()).toBe(false, 'Y-axis title element missing');
+        expect(yTitleSel.text()).toBe(expYTitle);
     }
 });
+
+function expectTitle(expTitle) {
+    expectTitleFn(expTitle)();
+}
+
+function expectTitleFn(expTitle) {
+    return function() {
+        expect(titleSel().text()).toBe(expTitle);
+    };
+}
+
+function expectDefaultCenteredPosition(gd) {
+    var containerBB = gd.getBoundingClientRect();
+
+    expect(titleX()).toBe(containerBB.width / 2);
+    expect(titleY()).toBe(gd._fullLayout.margin.t / 2);
+}
+
+function titleX() {
+    return Number.parseFloat(titleSel().attr('x'));
+}
+
+function titleY() {
+    return Number.parseFloat(titleSel().attr('y'));
+}
+
+function titleSel() {
+    var titleSel = d3.select('.infolayer .g-gtitle .gtitle');
+    expect(titleSel.empty()).toBe(false, 'Title element missing');
+    return titleSel;
+}
 
 describe('editable titles', function() {
     'use strict';
