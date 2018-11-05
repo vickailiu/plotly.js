@@ -70,117 +70,72 @@ describe('titles can be updated', function() {
     'use strict';
 
     var data = [{x: [1, 2, 3], y: [1, 2, 3]}];
-    var layout = {
-        title: {text: 'Plotly line chart'},
-        xaxis: {title: {text: 'Age'}},
-        yaxis: {title: {text: 'Weight'}}
-    };
     var NEW_TITLE = 'Weight over years';
     var NEW_XTITLE = 'Age in years';
     var NEW_YTITLE = 'Average weight';
     var gd;
 
     beforeEach(function() {
+        var layout = {
+            title: {text: 'Plotly line chart'},
+            xaxis: {title: {text: 'Age'}},
+            yaxis: {title: {text: 'Weight'}}
+        };
         gd = createGraphDiv();
         Plotly.plot(gd, data, Lib.extendDeep({}, layout));
-        expectInitialTitles();
+
+        expectTitles('Plotly line chart', 'Age', 'Weight');
     });
 
     afterEach(destroyGraphDiv);
 
-    it('via `Plotly.relayout` by replacing the entire title objects', function() {
-        var update = {
-            title: {text: NEW_TITLE},
-            xaxis: {title: {text: NEW_XTITLE}},
-            yaxis: {title: {text: NEW_YTITLE}}
-        };
-        Plotly.relayout(gd, update);
+    [
+        {
+            desc: 'by replacing the entire title objects',
+            update: {
+                title: {text: NEW_TITLE},
+                xaxis: {title: {text: NEW_XTITLE}},
+                yaxis: {title: {text: NEW_YTITLE}}
+            }
+        },
+        {
+            desc: 'by using attribute strings',
+            update: {
+                'title.text': NEW_TITLE,
+                'xaxis.title.text': NEW_XTITLE,
+                'yaxis.title.text': NEW_YTITLE
+            }
+        },
+        {
+            desc: 'despite passing title only as a string (backwards-compatibility)',
+            update: {
+                title: NEW_TITLE,
+                xaxis: {title: NEW_XTITLE},
+                yaxis: {title: NEW_YTITLE}
+            }
+        },
+        {
+            desc: 'despite passing title only as a string using string attributes ' +
+            '(backwards-compatibility)',
+            update: {
+                'title': NEW_TITLE,
+                'xaxis.title': NEW_XTITLE,
+                'yaxis.title': NEW_YTITLE
+            }
+        }
+    ].forEach(function(testCase) {
+        it('via `Plotly.relayout` ' + testCase.desc, function() {
+            Plotly.relayout(gd, testCase.update);
 
-        expectChangedTitles();
+            expectChangedTitles();
+        });
+
+        it('via `Plotly.update` ' + testCase.desc, function() {
+            Plotly.update(gd, {}, testCase.update);
+
+            expectChangedTitles();
+        });
     });
-
-    it('via `Plotly.relayout` by using attribute strings', function() {
-        var update = {
-            'title.text': NEW_TITLE,
-            'xaxis.title.text': NEW_XTITLE,
-            'yaxis.title.text': NEW_YTITLE
-        };
-        Plotly.relayout(gd, update);
-
-        expectChangedTitles();
-    });
-
-    it('via `Plotly.relayout` despite passing title only as a string (backwards-compatibility)', function() {
-        var update = {
-            title: NEW_TITLE,
-            xaxis: {title: NEW_XTITLE},
-            yaxis: {title: NEW_YTITLE}
-        };
-        Plotly.relayout(gd, update);
-
-        expectChangedTitles();
-    });
-
-    it('via `Plotly.relayout` despite passing title only as a string using string attributes ' +
-      '(backwards-compatibility)', function() {
-        var update = {
-            'title': NEW_TITLE,
-            'xaxis.title': NEW_XTITLE,
-            'yaxis.title': NEW_YTITLE
-        };
-        Plotly.relayout(gd, update);
-
-        expectChangedTitles();
-    });
-
-    it('via `Plotly.update` by replacing the entire title objects', function() {
-        var update = {
-            title: {text: NEW_TITLE},
-            xaxis: {title: {text: NEW_XTITLE}},
-            yaxis: {title: {text: NEW_YTITLE}}
-        };
-        Plotly.update(gd, {}, update);
-
-        expectChangedTitles();
-    });
-
-    it('via `Plotly.update` by using attribute strings', function() {
-        var update = {
-            'title.text': NEW_TITLE,
-            'xaxis.title.text': NEW_XTITLE,
-            'yaxis.title.text': NEW_YTITLE
-        };
-        Plotly.update(gd, {}, update);
-
-        expectChangedTitles();
-    });
-
-    it('via `Plotly.update` despite passing title only as a string (backwards-compatibility)', function() {
-        var update = {
-            title: NEW_TITLE,
-            xaxis: {title: NEW_XTITLE},
-            yaxis: {title: NEW_YTITLE}
-        };
-        Plotly.update(gd, {}, update);
-
-        expectChangedTitles();
-    });
-
-    it('via `Plotly.update` despite passing title only as a string using string attributes ' +
-      '(backwards-compatibility)', function() {
-        var update = {
-            'title': NEW_TITLE,
-            'xaxis.title': NEW_XTITLE,
-            'yaxis.title': NEW_YTITLE
-        };
-        Plotly.update(gd, {}, update);
-
-        expectChangedTitles();
-    });
-
-    function expectInitialTitles() {
-        expectTitles('Plotly line chart', 'Age', 'Weight');
-    }
 
     function expectChangedTitles() {
         expectTitles(NEW_TITLE, NEW_XTITLE, NEW_YTITLE);
