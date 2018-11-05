@@ -2088,7 +2088,7 @@ axes.doTicksSingle = function(gd, arg, skipTitle) {
         var axLetter = axid.charAt(0);
         var gs = gd._fullLayout._size;
         var offsetBase = 1.5;
-        var fontSize = ax.titlefont.size;
+        var fontSize = ax.title.font.size;
 
         var transform, counterAxis, x, y;
 
