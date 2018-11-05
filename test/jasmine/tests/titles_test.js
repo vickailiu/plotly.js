@@ -66,7 +66,7 @@ describe('Plot title', function() {
     });
 });
 
-describe('titles can be updated', function() {
+describe('Titles can be updated', function() {
     'use strict';
 
     var data = [{x: [1, 2, 3], y: [1, 2, 3]}];
@@ -185,7 +185,7 @@ function titleSel() {
     return titleSel;
 }
 
-describe('editable titles', function() {
+describe('Editable titles', function() {
     'use strict';
 
     var data = [{x: [1, 2, 3], y: [1, 2, 3]}];
