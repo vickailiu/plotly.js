@@ -208,9 +208,11 @@ describe('Plot title', function() {
         // doesn't return the tightest bounding box of the current text
         // but a rectangle that is wide enough to contain any
         // possible character even though something like 'Ö' isn't
-        // used in the current title. getBoundingClientRect moreover
-        // differs from browser to browser and thus is unreliable to
-        // test vertical alignment.
+        // in the current title string. Moreover getBoundingClientRect
+        // (with respect to SVG <text> elements) differs from browser to
+        // browser and thus is unreliable for testing vertical alignment
+        // of SVG text. Because of that the cap line is calculated based on the
+        // element properties.
         var capLineY = calcTextCapLineY(titleSel());
 
         var msg = 'Title\'s cap line y is same as the top of ' + elemSelector.desc;
@@ -225,7 +227,7 @@ describe('Plot title', function() {
         // comment in `expectCapLineAlignsWithTopEdgeOf` for more info.
         var baselineY = calcTextBaselineY(titleSel());
 
-        var msg = 'Title baseline sits on bottom of ' + elemSelector.desc;
+        var msg = 'Title baseline sits on the bottom of ' + elemSelector.desc;
         expect(baselineY).toBeWithin(refElemBB.bottom, 1.1, msg);
     }
 

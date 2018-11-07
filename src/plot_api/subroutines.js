@@ -460,39 +460,49 @@ exports.drawMainTitle = function(gd) {
         'middle': alignmentConstants.MID_SHIFT + 'em',
         'bottom': '0em',
     };
-    var x, y;
-
-    if(fullLayout.title.xref === 'container') {
-        x = fullLayout.width * fullLayout.title.x;
-    } else if(fullLayout.title.xref === 'paper') {
-        x = fullLayout._size.l + fullLayout._size.w * fullLayout.title.x;
-    }
-
-    if(fullLayout.title.y === 'auto') {
-        y = fullLayout._size.t / 2;
-    } else {
-        if(fullLayout.title.yref === 'container') {
-            y = fullLayout.height - fullLayout.height * fullLayout.title.y;
-        } else if(fullLayout.title.yref === 'paper') {
-            y = fullLayout._size.t + fullLayout._size.h - fullLayout._size.h * fullLayout.title.y;
-        } else {
-            y = 0;
-            Lib.warn('Not able to determine a proper y value for title');
-        }
-    }
 
     Titles.draw(gd, 'gtitle', {
         propContainer: fullLayout,
         propName: 'title.text',
         placeholder: fullLayout._dfltTitle.plot,
         attributes: {
-            x: x,
-            y: y,
+            x: getMainTitleX(fullLayout),
+            y: getMainTitleY(fullLayout),
             'text-anchor': textAnchorDict[fullLayout.title.xanchor],
             dy: dyDict[fullLayout.title.yanchor]
         }
     });
 };
+
+function getMainTitleX(fullLayout) {
+    var title = fullLayout.title;
+    var _size = fullLayout._size;
+
+    switch(title.xref) {
+        case 'paper':
+            return _size.l + _size.w * title.x;
+        case 'container':
+        default:
+            return fullLayout.width * title.x;
+    }
+}
+
+function getMainTitleY(fullLayout) {
+    var title = fullLayout.title;
+    var _size = fullLayout._size;
+
+    if(title.y === 'auto') {
+        return _size.t / 2;
+    } else {
+        switch(title.yref) {
+            case 'paper':
+                return _size.t + _size.h - _size.h * title.y;
+            case 'container':
+            default:
+                return fullLayout.height - fullLayout.height * title.y;
+        }
+    }
+}
 
 exports.doTraceStyle = function(gd) {
     var calcdata = gd.calcdata;
