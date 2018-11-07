@@ -449,15 +449,47 @@ function findCounterAxisLineWidth(ax, side, counterAx, axList) {
 
 exports.drawMainTitle = function(gd) {
     var fullLayout = gd._fullLayout;
+    var textAnchorDict = {
+        'left': 'start',
+        'center': 'middle',
+        'right': 'end',
+        'auto': 'middle' // TODO That needs to be calculated based on x
+    };
+    var dyDict = {
+        'top': alignmentConstants.CAP_SHIFT + 'em',
+        'middle': alignmentConstants.MID_SHIFT + 'em',
+        'bottom': '0em',
+    };
+    var x, y;
+
+    if(fullLayout.title.xref === 'container') {
+        x = fullLayout.width * fullLayout.title.x;
+    } else if(fullLayout.title.xref === 'paper') {
+        x = fullLayout._size.l + fullLayout._size.w * fullLayout.title.x;
+    }
+
+    if(fullLayout.title.y === 'auto') {
+        y = fullLayout._size.t / 2;
+    } else {
+        if(fullLayout.title.yref === 'container') {
+            y = fullLayout.height - fullLayout.height * fullLayout.title.y;
+        } else if(fullLayout.title.yref === 'paper') {
+            y = fullLayout._size.t + fullLayout._size.h - fullLayout._size.h * fullLayout.title.y;
+        } else {
+            y = 0;
+            Lib.warn('Not able to determine a proper y value for title');
+        }
+    }
 
     Titles.draw(gd, 'gtitle', {
         propContainer: fullLayout,
         propName: 'title.text',
         placeholder: fullLayout._dfltTitle.plot,
         attributes: {
-            x: fullLayout.width / 2,
-            y: fullLayout._size.t / 2,
-            'text-anchor': 'middle'
+            x: x,
+            y: y,
+            'text-anchor': textAnchorDict[fullLayout.title.xanchor],
+            dy: dyDict[fullLayout.title.yanchor]
         }
     });
 };
