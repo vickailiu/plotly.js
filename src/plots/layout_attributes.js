@@ -42,8 +42,8 @@ module.exports = {
             valType: 'enumerated',
             dflt: 'container',
             values: ['container', 'paper'],
-            role: 'info', // TODO sure?
-            editType: 'calc', // TODO sure?
+            role: 'info',
+            editType: 'layoutstyle',
             description: [
                 'Some',
                 'docu', // TODO document
@@ -53,8 +53,8 @@ module.exports = {
             valType: 'enumerated',
             dflt: 'container',
             values: ['container', 'paper'],
-            role: 'info', // TODO sure?
-            editType: 'calc', // TODO sure?
+            role: 'info',
+            editType: 'layoutstyle',
             description: [
                 'Some',
                 'docu', // TODO document
@@ -63,8 +63,8 @@ module.exports = {
         x: {
             valType: 'number',
             dflt: '0.5',
-            role: 'style', // TODO sure?
-            editType: 'calc', // TODO sure?
+            role: 'style',
+            editType: 'layoutstyle',
             description: [
                 'Some',
                 'docu', // TODO document
@@ -73,19 +73,19 @@ module.exports = {
         y: {
             valType: 'any',
             dflt: 'auto',
-            role: 'style', // TODO sure?
-            editType: 'calc', // TODO sure?
+            role: 'style',
+            editType: 'layoutstyle',
             description: [
                 'Some',
-                'docu', // TODO document
+                'docu',
             ].join(' ')
         },
         xanchor: {
             valType: 'enumerated',
             dflt: 'auto',
             values: ['auto', 'left', 'center', 'right'],
-            role: 'info', // TODO sure?
-            editType: 'calc', // TODO sure?
+            role: 'info',
+            editType: 'layoutstyle',
             description: [
                 'Some',
                 'docu', // TODO document
@@ -95,8 +95,8 @@ module.exports = {
             valType: 'enumerated',
             dflt: 'auto',
             values: ['auto', 'top', 'middle', 'bottom'],
-            role: 'info', // TODO sure?
-            editType: 'calc', // TODO sure?
+            role: 'info',
+            editType: 'layoutstyle',
             description: [
                 'Some',
                 'docu', // TODO document
