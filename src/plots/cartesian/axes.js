@@ -1621,7 +1621,6 @@ axes.doTicksSingle = function(gd, arg, skipTitle) {
     var axid = ax._id;
     var axLetter = axid.charAt(0);
     var counterLetter = axes.counterLetter(axid);
-    var vals = ax._vals = axes.calcTicks(ax);
     var datafn = function(d) { return [d.text, d.x, ax.mirror, d.font, d.fontSize, d.fontColor].join('_'); };
     var tcls = axid + 'tick';
     var gcls = axid + 'grid';
@@ -1695,6 +1694,8 @@ axes.doTicksSingle = function(gd, arg, skipTitle) {
 
     if(!ax.visible) return;
 
+    // 'vals' corresponds to the label d3-data
+    var vals = ax._vals = axes.calcTicks(ax);
     if(ax._tickFilter) {
         vals = vals.filter(ax._tickFilter);
     }
@@ -1703,13 +1704,37 @@ axes.doTicksSingle = function(gd, arg, skipTitle) {
     // 1 pixel of the end.
     // The key case here is removing zero lines when the axis bound is zero.
     // Don't clip angular values.
-    var valsClipped = ax._valsClipped = isAngular(ax) ?
-        vals :
-        vals.filter(function(d) { return clipEnds(ax, d.x); });
+    var clipFn = isAngular(ax) ?
+        Lib.identity :
+        function(d) { return clipEnds(ax, d.x); };
+
+    var ticksData;
+    var gridData;
+
+    if(ax.tickson === 'boundaries') {
+        // draw ticks and grid lines 1/2 a 'category' to the left,
+        // add one item at axis tail
+        var valsBoundaries = vals.map(function(d) {
+            var d2 = Lib.extendFlat({}, d);
+            d2.x -= 0.5;
+            return d2;
+        });
+        var d2 = Lib.extendFlat({}, vals[vals.length - 1]);
+        d2.x += 0.5;
+        valsBoundaries.push(d2);
+
+        gridData = valsBoundaries.filter(clipFn);
+        ticksData = ax.ticks === 'inside' ? gridData : valsBoundaries;
+    } else {
+        gridData = vals.filter(clipFn);
+        ticksData = ax.ticks === 'inside' ? gridData : vals;
+    }
+
+    // save grid data for splom regl grid
+    ax._gridData = gridData;
 
     function drawTicks(container, tickpath) {
-        var ticks = container.selectAll('path.' + tcls)
-            .data(ax.ticks === 'inside' ? valsClipped : vals, datafn);
+        var ticks = container.selectAll('path.' + tcls).data(ticksData, datafn);
 
         if(tickpath && ax.ticks) {
             ticks.enter().append('path').classed(tcls, 1).classed('ticks', 1)
@@ -2158,7 +2183,7 @@ axes.doTicksSingle = function(gd, arg, skipTitle) {
                 ('M' + counteraxis._offset + ',0h')
             ) + counteraxis._length);
         var grid = gridcontainer.selectAll('path.' + gcls)
-            .data((ax.showgrid === false) ? [] : valsClipped, datafn);
+            .data(ax.showgrid === false ? [] : gridData, datafn);
         grid.enter().append('path').classed(gcls, 1)
             .classed('crisp', 1)
             .attr('d', gridpath)
@@ -2271,7 +2296,7 @@ axes.shouldShowZeroLine = function(gd, ax, counterAxis) {
         (rng[0] * rng[1] <= 0) &&
         ax.zeroline &&
         (ax.type === 'linear' || ax.type === '-') &&
-        ax._valsClipped.length &&
+        ax._gridData.length &&
         (
             clipEnds(ax, 0) ||
             !anyCounterAxLineAtZero(gd, ax, counterAxis, rng) ||

@@ -304,6 +304,15 @@ module.exports = {
             'the axis lines.'
         ].join(' ')
     },
+    tickson: {
+        valType: 'enumerated',
+        values: ['labels', 'boundaries'],
+        role: 'info',
+        editType: 'ticks',
+        description: [
+            '...'
+        ].join(' ')
+    },
     mirror: {
         valType: 'enumerated',
         values: [true, 'ticks', false, 'all', 'allticks'],

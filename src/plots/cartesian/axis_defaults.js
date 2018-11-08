@@ -89,5 +89,10 @@ module.exports = function handleAxisDefaults(containerIn, containerOut, coerce, 
 
     if(options.automargin) coerce('automargin');
 
+    if(!options.noTickson &&
+        containerOut.type === 'category' && (containerOut.ticks || containerOut.showgrid)) {
+        coerce('tickson');
+    }
+
     return containerOut;
 };
