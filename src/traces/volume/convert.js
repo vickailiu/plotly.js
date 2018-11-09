@@ -6,58 +6,6 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-/*
-    Usage example:
-
-    var width = 128
-    var height = 128
-    var depth = 128
-
-    var xs = []
-    var ys = []
-    var zs = []
-
-    var data = []
-    for (var z=0; z<depth; z++)
-    for (var y=0; y<height; y++)
-    for (var x=0; x<width; x++) {
-        xs.push(2*x/width);
-        ys.push(3*y/height);
-        zs.push(z/depth);
-        var value = Math.pow(Math.abs((10000 + (0.5+Math.random())*500 * (
-            Math.sin(2 * 2*Math.PI*(z/depth-0.5)) +
-            Math.cos(3 * 2*Math.PI*(x*x/(width*width)-0.5)) +
-            Math.sin(4 * 2*Math.PI*(y*z/(height*depth)-0.5))
-        )) * Math.pow(z/depth,1/3) * (1-Math.sqrt(x*x / width*width + y*y / height*height)) % 500000)/1e6, 2);
-        data[z*height*width + y*width + x] = value
-    }
-
-    var opacityscale = []
-    for (var i=0; i<16; i++) {
-        opacityscale[i] = [i/15, Math.pow(i/15, 1.2)]
-    }
-
-    Plotly.newPlot(gd, [{
-      type: 'volume',
-
-      x: xs,
-      y: ys,
-      z: zs,
-
-      values: data,
-
-      vmin: 0.05,
-      vmax: 0.22,
-
-      cmin: 0.05,
-      cmax: 0.25,
-
-      opacity: 0.05,
-
-      colorscale: 'Portland',
-      opacityscale: opacityscale
-    }])
-*/
 'use strict';
 
 var volumePlot = require('gl-volume3d');
