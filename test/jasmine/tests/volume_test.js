@@ -5,11 +5,10 @@ var supplyAllDefaults = require('../assets/supply_defaults');
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
 var failTest = require('../assets/fail_test');
-//var delay = require('../assets/delay');
-//var mouseEvent = require('../assets/mouse_event');
-
-var customAssertions = require('../assets/custom_assertions');
-//var assertHoverLabelContent = customAssertions.assertHoverLabelContent;
+// var delay = require('../assets/delay');
+// var mouseEvent = require('../assets/mouse_event');
+// var customAssertions = require('../assets/custom_assertions');
+// var assertHoverLabelContent = customAssertions.assertHoverLabelContent;
 
 describe('Test volume defaults', function() {
     var gd;

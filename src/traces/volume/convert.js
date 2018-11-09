@@ -13,7 +13,7 @@ var volumePlot = require('gl-volume3d');
 var simpleMap = require('../../lib').simpleMap;
 var parseColorScale = require('../../lib/gl_format_color').parseColorScale;
 
-//var distinctVals = require('../../lib').distinctVals;
+// var distinctVals = require('../../lib').distinctVals;
 
 function Volume(scene, uid) {
     this.scene = scene;
@@ -24,7 +24,7 @@ function Volume(scene, uid) {
 
 var proto = Volume.prototype;
 
-//proto.handlePick = function(selection) {
+// proto.handlePick = function(selection) {
 proto.handlePick = function() {
     return false;
 };
@@ -167,8 +167,8 @@ function convert(gl, scene, trace) {
 /*
     // pass gl-mesh3d lighting attributes
     var lp = trace.lightposition;
-    //for(var i = 0; i < volume.mesh.length; i++) {
-        //var meshData = volume.mesh[i];
+    // for(var i = 0; i < volume.mesh.length; i++) {
+        // var meshData = volume.mesh[i];
         var meshData = volume;
 
         meshData.lightPosition = [lp.x, lp.y, lp.z];
@@ -179,7 +179,7 @@ function convert(gl, scene, trace) {
         meshData.fresnel = trace.lighting.fresnel;
         meshData.opacity = trace.opacity;
 
-    //}
+    // }
 */
     return volume;
 }

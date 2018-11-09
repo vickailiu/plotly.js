@@ -11,7 +11,7 @@
 var colorscaleAttrs = require('../../components/colorscale/attributes');
 var colorbarAttrs = require('../../components/colorbar/attributes');
 var mesh3dAttrs = require('../mesh3d/attributes');
-//var baseAttrs = require('../../plots/attributes');
+// var baseAttrs = require('../../plots/attributes');
 
 var extendFlat = require('../../lib/extend').extendFlat;
 
