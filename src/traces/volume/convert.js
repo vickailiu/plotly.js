@@ -65,7 +65,7 @@ var volumePlot = require('gl-volume3d');
 var simpleMap = require('../../lib').simpleMap;
 var parseColorScale = require('../../lib/gl_format_color').parseColorScale;
 
-var distinctVals = require('../../lib').distinctVals;
+//var distinctVals = require('../../lib').distinctVals;
 
 function Volume(scene, uid) {
     this.scene = scene;
@@ -76,7 +76,8 @@ function Volume(scene, uid) {
 
 var proto = Volume.prototype;
 
-proto.handlePick = function(selection) {
+//proto.handlePick = function(selection) {
+proto.handlePick = function() {
     return false;
 };
 
@@ -153,11 +154,6 @@ function convert(gl, scene, trace) {
     var ys = getSequence(trace.y, xs.length);
     var zs = getSequence(trace.z, xs.length * ys.length);
 
-console.log("xs=", xs);
-console.log("ys=", ys);
-console.log("zs=", zs);
-
-
     volumeOpts.dimensions = [xs.length, ys.length, zs.length];
     volumeOpts.meshgrid = [
         toDataCoords(xs, 'xaxis'),
@@ -181,7 +177,7 @@ console.log("zs=", zs);
     if(vmin === undefined || vmax === undefined) {
         var minV = trace.values[0], maxV = trace.values[0];
         for(var i = 1; i < trace.values.length; i++) {
-            var v = trace.values[v];
+            var v = trace.values[i];
             if(v > maxV) {
                 maxV = v;
             } else if(v < minV) {
@@ -201,12 +197,7 @@ console.log("zs=", zs);
 
     var bounds = [[0, 0, 0], volumeOpts.dimensions];
 
-    console.log("volumeOpts=", volumeOpts);
-    console.log("bounds=", bounds);
-
     var volume = volumePlot(gl, volumeOpts, bounds);
-
-    console.log("volume=", volume);
 
 /*
 

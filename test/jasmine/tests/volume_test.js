@@ -5,11 +5,11 @@ var supplyAllDefaults = require('../assets/supply_defaults');
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
 var failTest = require('../assets/fail_test');
-var delay = require('../assets/delay');
-var mouseEvent = require('../assets/mouse_event');
+//var delay = require('../assets/delay');
+//var mouseEvent = require('../assets/mouse_event');
 
 var customAssertions = require('../assets/custom_assertions');
-var assertHoverLabelContent = customAssertions.assertHoverLabelContent;
+//var assertHoverLabelContent = customAssertions.assertHoverLabelContent;
 
 describe('Test volume defaults', function() {
     var gd;
@@ -69,14 +69,14 @@ describe('Test volume autorange:', function() {
         Plotly.purge(gd);
         destroyGraphDiv();
     });
-
+/*
     function _assertAxisRanges(msg, xrng, yrng, zrng) {
         var sceneLayout = gd._fullLayout.scene;
         expect(sceneLayout.xaxis.range).toBeCloseToArray(xrng, 2, 'xaxis range - ' + msg);
         expect(sceneLayout.yaxis.range).toBeCloseToArray(yrng, 2, 'yaxis range - ' + msg);
         expect(sceneLayout.zaxis.range).toBeCloseToArray(zrng, 2, 'zaxis range - ' + msg);
     }
-
+*/
 
 });
 

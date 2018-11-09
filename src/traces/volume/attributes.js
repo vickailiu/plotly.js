@@ -11,7 +11,7 @@
 var colorscaleAttrs = require('../../components/colorscale/attributes');
 var colorbarAttrs = require('../../components/colorbar/attributes');
 var mesh3dAttrs = require('../mesh3d/attributes');
-var baseAttrs = require('../../plots/attributes');
+//var baseAttrs = require('../../plots/attributes');
 
 var extendFlat = require('../../lib/extend').extendFlat;
 
@@ -115,7 +115,5 @@ var fromMesh3d = ['opacity', 'lightposition', 'lighting'];
 fromMesh3d.forEach(function(k) {
     attrs[k] = mesh3dAttrs[k];
 });
-
-console.log("attrs=", attrs);
 
 module.exports = attrs;
