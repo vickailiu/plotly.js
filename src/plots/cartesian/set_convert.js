@@ -255,7 +255,7 @@ module.exports = function setConvert(ax, fullLayout) {
             return ensureNumber(v);
         };
     }
-    else if(ax.type === 'mulitcategory') {
+    else if(ax.type === 'multicategory') {
         // ax.d2c = ax.d2l = setMultiCategoryIndex;
         // ax.r2d = ax.c2d = ax.l2d = getMultiCategoryName;
 
@@ -442,7 +442,7 @@ module.exports = function setConvert(ax, fullLayout) {
             }
 
             arrayOut = new Array(len);
-            if(axType === 'mulitcategory') {
+            if(axType === 'multicategory') {
                 var tmp = new Array(len);
                 for(j = 0; j < arrayIn.length; j++) {
                     if(Array.isArray(arrayIn[j])) {
