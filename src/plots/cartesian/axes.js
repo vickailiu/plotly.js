@@ -157,6 +157,7 @@ var getDataConversions = axes.getDataConversions = function(gd, trace, target, t
                 ax.d2c(targetArray[i]);
             }
         }
+        // TODO?
     } else {
         ax = axes.getFromTrace(gd, trace, d2cTarget);
     }
@@ -197,7 +198,7 @@ axes.counterLetter = function(id) {
 axes.minDtick = function(ax, newDiff, newFirst, allow) {
     // doesn't make sense to do forced min dTick on log or category axes,
     // and the plot itself may decide to cancel (ie non-grouped bars)
-    if(['log', 'category'].indexOf(ax.type) !== -1 || !allow) {
+    if(['log', 'category', 'multicategory'].indexOf(ax.type) !== -1 || !allow) {
         ax._minDtick = 0;
     }
     // undefined means there's nothing there yet
@@ -486,11 +487,10 @@ axes.prepTicks = function(ax) {
         var nt = ax.nticks,
             minPx;
         if(!nt) {
-            if(ax.type === 'category') {
+            if(ax.type === 'category' || ax.type === 'multicategory') {
                 minPx = ax.tickfont ? (ax.tickfont.size || 12) * 1.2 : 15;
                 nt = ax._length / minPx;
-            }
-            else {
+            } else {
                 minPx = ax._id.charAt(0) === 'y' ? 40 : 80;
                 nt = Lib.constrain(ax._length / minPx, 4, 9) + 1;
             }
@@ -552,7 +552,7 @@ axes.calcTicks = function calcTicks(ax) {
 
     // return the full set of tick vals
     var vals = [];
-    if(ax.type === 'category') {
+    if(ax.type === 'category' || ax.type === 'multicategory') {
         endTick = (axrev) ? Math.max(-0.5, endTick) :
             Math.min(ax._categories.length - 0.5, endTick);
     }
@@ -613,6 +613,7 @@ function arrayTicks(ax) {
     if(!Array.isArray(text)) text = [];
 
     // make sure showing ticks doesn't accidentally add new categories
+    // TODO?
     var tickVal2l = ax.type === 'category' ? ax.d2l_noadd : ax.d2l;
 
     // array ticks on log axes always show the full number
@@ -736,7 +737,7 @@ axes.autoTicks = function(ax, roughDTick) {
             ax.dtick = (roughDTick > 0.3) ? 'D2' : 'D1';
         }
     }
-    else if(ax.type === 'category') {
+    else if(ax.type === 'category' || ax.type === 'multicategory') {
         ax.tick0 = 0;
         ax.dtick = Math.ceil(Math.max(roughDTick, 1));
     }
@@ -776,7 +777,7 @@ function autoTickRound(ax) {
         dtick = 1;
     }
 
-    if(ax.type === 'category') {
+    if(ax.type === 'category' || ax.type === 'multicategory') {
         ax._tickround = null;
     }
     if(ax.type === 'date') {
@@ -882,7 +883,7 @@ axes.tickFirst = function(ax) {
         var tmin = sRound((r0 - tick0) / dtick) * dtick + tick0;
 
         // make sure no ticks outside the category list
-        if(ax.type === 'category') {
+        if(ax.type === 'category' || ax.type === 'multicategory') {
             tmin = Lib.constrain(tmin, 0, ax._categories.length - 1);
         }
         return tmin;
@@ -943,6 +944,7 @@ axes.tickText = function(ax, x, hover) {
     var axType = ax.type;
     var arrayMode = ax.tickmode === 'array';
     var extraPrecision = hover || arrayMode;
+    // TODO ?
     var tickVal2l = axType === 'category' ? ax.d2l_noadd : ax.d2l;
     var i;
 
@@ -982,6 +984,7 @@ axes.tickText = function(ax, x, hover) {
     if(axType === 'date') formatDate(ax, out, hover, extraPrecision);
     else if(axType === 'log') formatLog(ax, out, hover, extraPrecision, hideexp);
     else if(axType === 'category') formatCategory(ax, out);
+    else if(axType === 'multicategory') formatMultiCategory(ax, out, hover);
     else if(isAngular(ax)) formatAngle(ax, out, hover, extraPrecision, hideexp);
     else formatLinear(ax, out, hover, extraPrecision, hideexp);
 
@@ -1164,6 +1167,25 @@ function formatCategory(ax, out) {
     var tt = ax._categories[Math.round(out.x)];
     if(tt === undefined) tt = '';
     out.text = String(tt);
+}
+
+function formatMultiCategory(ax, out, hover) {
+    var v = Math.round(out.x);
+
+    var tt = ax._categories[v][1];
+    tt = tt === undefined ? '' : String(tt);
+
+    var tt2 = ax._categories[v][0];
+    tt2 = tt2 === undefined ? '' : String(tt2);
+
+    if(hover) {
+        // TODO is this what we want?
+        out.text = tt2 + ' - ' + tt;
+    } else {
+        // setup for secondary labels
+        out.text = tt;
+        out.text2 = tt2;
+    }
 }
 
 function formatLinear(ax, out, hover, extraPrecision, hideexp) {
@@ -1749,10 +1771,12 @@ axes.doTicksSingle = function(gd, arg, skipTitle) {
         else ticks.remove();
     }
 
-    function drawLabels(container, position) {
-        // tick labels - for now just the main labels.
-        // TODO: mirror labels, esp for subplots
-        tickLabels = container.selectAll('g.' + tcls).data(vals, datafn);
+    // tick labels - for now just the main labels.
+    // TODO: mirror labels, esp for subplots
+    function drawLabels(container, position, _vals, _tcls) {
+        _vals = _vals || vals;
+        _tcls = _tcls || tcls;
+        tickLabels = container.selectAll('g.' + _tcls).data(_vals, datafn);
 
         if(!isNumeric(position)) {
             tickLabels.remove();
@@ -1812,7 +1836,7 @@ axes.doTicksSingle = function(gd, arg, skipTitle) {
         var autoangle = 0;
         var labelsReady = [];
 
-        tickLabels.enter().append('g').classed(tcls, 1)
+        tickLabels.enter().append('g').classed(_tcls, 1)
             .append('text')
                 // only so tex has predictable alignment that we can
                 // alter later
@@ -1840,6 +1864,7 @@ axes.doTicksSingle = function(gd, arg, skipTitle) {
                         positionLabels(thisLabel, ax.tickangle);
                     }
                 });
+
         tickLabels.exit().remove();
 
         tickLabels.each(function(d) {
@@ -1954,8 +1979,8 @@ axes.doTicksSingle = function(gd, arg, skipTitle) {
                 }
                 if(autoangle) {
                     var tickspacing = Math.abs(
-                            (vals[vals.length - 1].x - vals[0].x) * ax._m
-                        ) / (vals.length - 1);
+                            (_vals[_vals.length - 1].x - _vals[0].x) * ax._m
+                        ) / (_vals.length - 1);
                     if(tickspacing < maxFontSize * 2.5) {
                         autoangle = 90;
                     }
@@ -2175,6 +2200,10 @@ axes.doTicksSingle = function(gd, arg, skipTitle) {
         });
     }
 
+    function drawDividers() {
+
+    }
+
     function drawGrid(plotinfo, counteraxis) {
         if(fullLayout._hasOnlyLargeSploms) return;
 
@@ -2287,8 +2316,29 @@ axes.doTicksSingle = function(gd, arg, skipTitle) {
         });
 
         var mainContainer = mainPlotinfo[axLetter + 'axislayer'];
+        var mainLinePosition = ax._mainLinePosition;
+        if(ax.type === 'multicategory') {
+            drawLabels(mainContainer, mainLinePosition);
+            var lookup = {};
+            for(var i = 0; i < vals.length; i++) {
+                var d = vals[i];
+                if(lookup[d.text2]) {
+                    lookup[d.text2].push(d.x);
+                } else {
+                    lookup[d.text2] = [d.x];
+                }
+            }
+            var secondaryLabelVals = [];
+            for(var k in lookup) {
+                secondaryLabelVals.push(tickTextObj(ax, Lib.interp(lookup[k], 0.5), k));
+            }
 
-        return drawLabels(mainContainer, ax._mainLinePosition);
+            // drawDividers()
+
+            return drawLabels(mainContainer, mainLinePosition + 20, secondaryLabelVals, tcls + '2');
+        } else {
+            return drawLabels(mainContainer, mainLinePosition);
+        }
     }
 };
 
