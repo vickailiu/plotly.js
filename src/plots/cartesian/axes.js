@@ -2085,6 +2085,7 @@ axes.doTicksSingle = function(gd, arg, skipTitle) {
         }
 
         function doAutoMargins() {
+            // TODO adapt for secondaryLabelVals
             var pushKey = ax._name + '.automargin';
             if(axLetter !== 'x' && axLetter !== 'y') { return; }
             if(!ax.automargin) {
@@ -2168,6 +2169,8 @@ axes.doTicksSingle = function(gd, arg, skipTitle) {
                     fontSize * (ax.showticklabels ? 1.5 : 0.5);
             }
             y += counterAxis._offset;
+
+            // TODO maybe add a padding here for secondaryLabel
 
             if(!avoid.side) avoid.side = 'bottom';
         }
@@ -2335,7 +2338,8 @@ axes.doTicksSingle = function(gd, arg, skipTitle) {
 
             // drawDividers()
 
-            return drawLabels(mainContainer, mainLinePosition + 20, secondaryLabelVals, tcls + '2');
+            var secondarayPosition = mainLinePosition + {bottom: 20, top: -20}[ax.side];
+            return drawLabels(mainContainer, secondarayPosition, secondaryLabelVals, tcls + '2');
         } else {
             return drawLabels(mainContainer, mainLinePosition);
         }
