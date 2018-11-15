@@ -2598,7 +2598,7 @@ describe('Queue', function() {
         .then(function() {
             expect(gd.undoQueue.index).toEqual(2);
             expect(gd.undoQueue.queue[1].undo.args[0][1].title).toEqual(null);
-            expect(gd.undoQueue.queue[1].redo.args[0][1].title).toEqual('A title');
+            expect(gd.undoQueue.queue[1].redo.args[0][1].title.text).toEqual('A title');
 
             return Plotly.restyle(gd, 'mode', 'markers');
         })
@@ -2610,7 +2610,7 @@ describe('Queue', function() {
             expect(gd.undoQueue.queue[1].redo.args[0][1].mode).toEqual('markers');
 
             expect(gd.undoQueue.queue[0].undo.args[0][1].title).toEqual(null);
-            expect(gd.undoQueue.queue[0].redo.args[0][1].title).toEqual('A title');
+            expect(gd.undoQueue.queue[0].redo.args[0][1].title.text).toEqual('A title');
 
             return Plotly.restyle(gd, 'transforms[0]', { type: 'filter' });
         })
