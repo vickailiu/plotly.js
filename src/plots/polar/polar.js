@@ -471,7 +471,7 @@ proto.updateRadialAxisTitle = function(fullLayout, polarLayout, _angle) {
     var pad = 0;
     if(radialLayout.title) {
         var h = Drawing.bBox(_this.layers['radial-axis'].node()).height;
-        var ts = radialLayout.titlefont.size;
+        var ts = radialLayout.title.font.size;
         pad = radialLayout.side === 'counterclockwise' ?
             -h - ts * 0.4 :
             h + ts * 0.8;

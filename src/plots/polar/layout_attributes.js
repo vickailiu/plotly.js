@@ -9,6 +9,7 @@
 'use strict';
 
 var colorAttrs = require('../../components/color/attributes');
+// TODO Which other modules are reusing the new title defintion?
 var axesAttrs = require('../cartesian/layout_attributes');
 var domainAttrs = require('../domain').attributes;
 var extendFlat = require('../../lib').extendFlat;
@@ -112,8 +113,7 @@ var radialAxisAttrs = {
     },
 
 
-    title: extendFlat({}, axesAttrs.title, {editType: 'plot', dflt: ''}),
-    titlefont: overrideAll(axesAttrs.titlefont, 'plot', 'from-root'),
+    title: overrideAll(axesAttrs.title, 'plot', 'from-root'),
     // might need a 'titleside' and even 'titledirection' down the road
 
     hoverformat: axesAttrs.hoverformat,
