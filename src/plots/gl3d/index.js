@@ -51,6 +51,11 @@ exports.plot = function plotGl3d(gd) {
             scene = sceneLayout._scene;
 
         if(!scene) {
+
+            console.log("_____________________________");
+            console.log("gd._context.plotGlPixelRatio=", gd._context.plotGlPixelRatio);
+            console.log("_____________________________");
+
             scene = new Scene({
                 id: sceneId,
                 graphDiv: gd,

@@ -36,7 +36,13 @@ var SUBPLOT_PATTERN = require('../cartesian/constants').SUBPLOT_PATTERN;
 function Scene2D(options, fullLayout) {
     this.container = options.container;
     this.graphDiv = options.graphDiv;
-    this.pixelRatio = options.plotGlPixelRatio || window.devicePixelRatio;
+
+    console.log("______________________________________________");
+    console.log("options.plotGlPixelRatio=", options.plotGlPixelRatio);
+    console.log("options.pixelRatio=", options.pixelRatio);
+    console.log("______________________________________________");
+
+    this.pixelRatio = options.plotGlPixelRatio;
     this.id = options.id;
     this.staticPlot = !!options.staticPlot;
     this.scrollZoom = this.graphDiv._context.scrollZoom;

@@ -134,7 +134,7 @@ module.exports = {
     displaylogo: true,
 
     // increase the pixel ratio for Gl plot images
-    plotGlPixelRatio: 2,
+    plotGlPixelRatio: window.devicePixelRatio,
 
     /*
      * background setting function

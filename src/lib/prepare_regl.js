@@ -35,6 +35,10 @@ module.exports = function prepareRegl(gd, extensions) {
         // only parcoords needs pick layer
         if(d.pick && !fullLayout._has('parcoords')) return;
 
+        console.log("gd._context.plotGlPixelRatio=", gd._context.plotGlPixelRatio);
+        console.log("window.devicePixelRatio=", window.devicePixelRatio);
+        console.log("global=", global);
+
         try {
             d.regl = createRegl({
                 canvas: this,
@@ -42,7 +46,7 @@ module.exports = function prepareRegl(gd, extensions) {
                     antialias: !d.pick,
                     preserveDrawingBuffer: true
                 },
-                pixelRatio: gd._context.plotGlPixelRatio || global.devicePixelRatio,
+                pixelRatio: gd._context.plotGlPixelRatio || window.devicePixelRatio,
                 extensions: extensions || []
             });
         } catch(e) {

@@ -14,7 +14,7 @@ module.exports = {
     overdrag: 45,
     verticalPadding: 2, // otherwise, horizontal lines on top or bottom are of lower width
     tickDistance: 50,
-    canvasPixelRatio: 1,
+    canvasPixelRatio: window.devicePixelRatio,
     blockLineCount: 5000,
     layers: ['contextLineLayer', 'focusLineLayer', 'pickLineLayer'],
     axisTitleOffset: 28,

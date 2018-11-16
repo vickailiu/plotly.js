@@ -152,8 +152,8 @@ module.exports = function clonePlot(graphObj, options) {
                 true :
                 options.staticPlot,
             plotGlPixelRatio: (options.plotGlPixelRatio === undefined) ?
-                2 :
-                options.plotGlPixelRatio,
+                window.devicePixelRatio :
+                options.plotGlPixelRatio, // does not look right!
             displaylogo: options.displaylogo || false,
             showLink: options.showLink || false,
             showTips: options.showTips || false,

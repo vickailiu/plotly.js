@@ -199,6 +199,11 @@ function initializeGLPlot(scene, fullLayout, canvas, gl) {
                 throw new Error('error creating static canvas/context for image server');
             }
         }
+
+        console.log("===============================");
+        console.log("scene.pixelRatio=", scene.pixelRatio);
+        console.log("===============================");
+
         glplotOptions.pixelRatio = scene.pixelRatio;
         glplotOptions.gl = STATIC_CONTEXT;
         glplotOptions.canvas = STATIC_CANVAS;
@@ -308,7 +313,7 @@ function Scene(options, fullLayout) {
     this.spikeOptions = createSpikeOptions(fullLayout[this.id]);
     this.container = sceneContainer;
     this.staticMode = !!options.staticPlot;
-    this.pixelRatio = options.plotGlPixelRatio || 2;
+    this.pixelRatio = options.plotGlPixelRatio || window.devicePixelRatio;
 
     // Coordinate rescaling
     this.dataScale = [1, 1, 1];
