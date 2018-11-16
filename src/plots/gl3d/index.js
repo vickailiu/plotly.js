@@ -52,16 +52,16 @@ exports.plot = function plotGl3d(gd) {
 
         if(!scene) {
 
-            console.log("_____________________________");
+            console.log(".............................");
             console.log("gd._context.plotGlPixelRatio=", gd._context.plotGlPixelRatio);
-            console.log("_____________________________");
+            console.log(".............................");
 
             scene = new Scene({
                 id: sceneId,
                 graphDiv: gd,
                 container: gd.querySelector('.gl-container'),
                 staticPlot: gd._context.staticPlot,
-                plotGlPixelRatio: gd._context.plotGlPixelRatio
+                plotGlPixelRatio: 2 * gd._context.plotGlPixelRatio
             },
                 fullLayout
             );

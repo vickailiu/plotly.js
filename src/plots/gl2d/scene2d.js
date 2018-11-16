@@ -39,10 +39,9 @@ function Scene2D(options, fullLayout) {
 
     console.log("______________________________________________");
     console.log("options.plotGlPixelRatio=", options.plotGlPixelRatio);
-    console.log("options.pixelRatio=", options.pixelRatio);
     console.log("______________________________________________");
 
-    this.pixelRatio = options.plotGlPixelRatio;
+    this.pixelRatio = 2 * options.plotGlPixelRatio;
     this.id = options.id;
     this.staticPlot = !!options.staticPlot;
     this.scrollZoom = this.graphDiv._context.scrollZoom;

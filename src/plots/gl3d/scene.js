@@ -313,7 +313,7 @@ function Scene(options, fullLayout) {
     this.spikeOptions = createSpikeOptions(fullLayout[this.id]);
     this.container = sceneContainer;
     this.staticMode = !!options.staticPlot;
-    this.pixelRatio = options.plotGlPixelRatio || window.devicePixelRatio;
+    this.pixelRatio = 2 * options.plotGlPixelRatio || 2 * window.devicePixelRatio;
 
     // Coordinate rescaling
     this.dataScale = [1, 1, 1];
